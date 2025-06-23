@@ -1,0 +1,36 @@
+@import "tailwindcss";
+.perspective {
+    perspective: 1000px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+.glass-card {
+    background-color: rgb(55, 65, 81);
+    /* gray-700/30 */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 20px 25px -5px rgba(255, 255, 255, 0.192),
+        0 8px 10px -6px rgba(253, 250, 250, 0.664);
+}
+
+.dark .glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+.dark .glass-card {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: rgba(96, 165, 250, 0.3);
+}
