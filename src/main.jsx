@@ -38,10 +38,11 @@ const router = createBrowserRouter(
           <Route path = 'dashboard/learnSpanish' element={<LearnSpanish/>}/>
           <Route path="dashboard/learnEnglish" element ={<LearnEnglish/>}/>
         <Route path='dashboard' element={<DashboardPage/>}/>
+            <Route path='/updateProfile' element={<UpdatePage/>}/>
         <Route path='subjects' element={<Subject />} />
         <Route path="dashboard/:subjectname" element={<FlashcardPage />} />
           <Route path="dashboard/:languageName/practice" element={<PracticePage/>}/>
-            <Route path='/updateprofile' element={<UpdatePage/>}/>
+
 
       </Route>
 

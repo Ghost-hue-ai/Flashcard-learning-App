@@ -2,13 +2,15 @@ import conf from '../conf/conf'
 import { Client,Account,ID } from "appwrite";
 import {OAuthProvider} from "appwrite";
 
-export class AppService{
+export class AppService {
     client = new Client()
     account;
-    constructor(){
+
+    constructor() {
         this.client.setEndpoint(conf.appwriteUrl).setProject(conf.projectId);
         this.account = new Account(this.client)
     }
+
     //
     // async createAccount({email,password,name}){
     //     try {
@@ -26,13 +28,13 @@ export class AppService{
     //     }
     // }
 
-    async getCurrentUser(){
+    async getCurrentUser() {
         try {
             return await this.account.get()
-            
+
         } catch (error) {
             console.error('error getting the current user info ', error);
-            
+
         }
     }
 
@@ -49,9 +51,9 @@ export class AppService{
     //     }
     // }
 
-    async logOutUser(){
+    async logOutUser() {
         try {
-             await this.account.deleteSession('current')
+            await this.account.deleteSession('current')
             const auth0Domain = 'dev-623dh4zgohh7hnua.us.auth0.com'; // e.g., dev-xyz123.us.auth0.com
             const clientId = '6sXhVtxPN8rYbVWTcCJZM2VmUGHWOHCU';
             const returnTo = encodeURIComponent('http://localhost:5173/'); // Where to go after logout
@@ -59,27 +61,44 @@ export class AppService{
             window.location.href = `https://${auth0Domain}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`;
 
 
-            
         } catch (error) {
-            console.error('error logging out user',error);
-            
+            console.error('error logging out user', error);
+
         }
     }
 
 
-   async loginWithAuth0(){
+    async loginWithAuth0() {
         try {
             return await this.account.createOAuth2Session(
                 OAuthProvider.Auth0,
                 "http://localhost:5173/oauth/callback",
                 'http://localhost:5173/login'
+            )
 
+        } catch (e) {
+            console.error('failed logging with auth0 ', e)
+        }
+    }
+    async updateUserName(name){
+        try {
+            await this.account.updateName(
+                name
             )
 
         }catch(e){
-            console.error('failed logging with auth0 ',e)
-        }
-   }
+        console.log(e)
+    }}
+
+
+    async updateAvatar(avatarUrl){
+try {
+    await this.account.updatePrefs({avatar:avatarUrl})
+}catch (e){
+    console.log(e)
+}
+    }
+
 
 
 

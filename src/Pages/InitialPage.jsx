@@ -24,7 +24,7 @@ function InitialPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 text-gray-800 flex flex-col justify-between">
 
         {/* Header */}
-        <header className="flex justify-between items-center px-6 py-4 bg-blue-700 shadow-md">
+        <header className="flex justify-between items-center px-6 py-4 bg-blue-500 shadow-md">
           <h2 className="font-bold text-2xl text-white tracking-wide">FlashCard Hub</h2>
           <button
               onClick={() => appService.loginWithAuth0()}
@@ -32,6 +32,7 @@ function InitialPage() {
           >
             Start Learning
           </button>
+
         </header>
 
         {/* Hero Section */}

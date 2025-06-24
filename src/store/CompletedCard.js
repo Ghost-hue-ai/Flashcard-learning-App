@@ -4,10 +4,12 @@ const initialState= {
     completedSpanishCard: {},
     spanishCompleted: 0,
     englishCompleted: 0,
-    recentLogs:[]
+    recentLogs:[],
+    profilePic:'',
+userData: {}
 }
 
-const cardSlice = createSlice({
+const savedSlice = createSlice({
     name : "card",
     initialState,
     reducers:{
@@ -30,16 +32,22 @@ const cardSlice = createSlice({
             }
             state.recentLogs.unshift(action.payload);
         },
+        updateProfilePic : (state,action)=>{
+            state.profilePic = action.payload
+        },
+        updateUserData : (state,action)=> {
+            state.userData = action.payload
+        },
 
 
 
 
         resetCards: (state)=>{
 
-            state.completedCards ={},
-            state.completedSpanishCard= {},
-            state.spanishCompleted= 0,
-                state.englishCompleted= 0,
+            state.completedCards ={}
+            state.completedSpanishCard= {}
+            state.spanishCompleted= 0
+                state.englishCompleted= 0
                 state.recentLogs=[]
         }
     }
@@ -47,5 +55,5 @@ const cardSlice = createSlice({
 
 
 
-export const {updateCard,resetCards,updateRecentLogs,updateSpanishCardData,updateEnglishCardData} = cardSlice.actions
-export default cardSlice.reducer
+export const {updateUserData,updateCard,updateProfilePic,resetCards,updateRecentLogs,updateSpanishCardData,updateEnglishCardData} = savedSlice.actions
+export default savedSlice.reducer

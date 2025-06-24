@@ -12,6 +12,7 @@ import {
     Tooltip
 } from "recharts";
 import {resetCards} from "../store/CompletedCard.js";
+import storageServ from "../appwrite/bucketConfig.js";
 
 const DashboardPage = () => {
     const { spanishCompleted, englishCompleted, recentLogs } = useSelector((state) => state.card);
@@ -20,7 +21,9 @@ const DashboardPage = () => {
         { language: "Spanish", completed: spanishCompleted },
         { language: "English", completed: englishCompleted },
     ];
-
+    const [profilePicUrl, setProfilePicUrl] = useState()
+    const profilePicId = useSelector(state => state.card.profilePic)
+    const userInfo = useSelector((state) => state.auth.userData);
     const [isBouncing, setIsBouncing] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate();
@@ -35,10 +38,24 @@ const DashboardPage = () => {
         setPredefinedSubjects(subjectsDoc.documents);
         setLoading(false);
     }
-    async function getUser() {
-        const userInfo = await appService.getCurrentUser();
+   function getUser() {
+
         setUser(userInfo);
     }
+    useEffect(() => {
+        (() => {
+            try {
+                const url = storageServ.getFilePreview(profilePicId);
+                console.log("🆔 profilePicId:", profilePicId);
+                console.log("🖼️ Preview URL from Appwrite:", url); // <-- Log this
+                if (url) {
+                    setProfilePicUrl(url);
+                }
+            } catch (e) {
+                console.log("❌ Error fetching profile pic preview:", e);
+            }
+        })();
+    }, [profilePicId]);
 
     useEffect(() => {
         (async () => {
@@ -64,12 +81,10 @@ const DashboardPage = () => {
                         className="flex items-center space-x-3 focus:outline-none hover:ring-2 hover:ring-purple-300 rounded-full p-1 transition"
                     >
                         {/* Avatar or Initial */}
-                        {user?.prefs?.avatar ? (
-                            <img
-                                src={user.prefs.avatar}
-                                alt="User Avatar"
-                                className="w-10 h-10 rounded-full object-cover"
-                            />
+                        {profilePicUrl? (
+
+                            <img src={profilePicUrl} alt="User Avatar"  className="w-10 h-10 rounded-full object-cover"/>
+
                         ) : (
                             <div className="w-10 h-10 bg-purple-200 text-purple-800 rounded-full flex items-center justify-center font-bold text-lg">
                                 {user?.name?.[0] ?? "?"}
@@ -95,8 +110,8 @@ const DashboardPage = () => {
                                 Logout
                             </button>
                             <button
-                                onClick={async () => {
-                                    navigate('/updateProfile.jsx')
+                                onClick={ () => {
+                                    navigate('/updateProfile')
 
                                 }}
                                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
