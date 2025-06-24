@@ -13,6 +13,10 @@ import {
 } from "recharts";
 import {resetCards} from "../store/CompletedCard.js";
 import storageServ from "../appwrite/bucketConfig.js";
+import { Menu } from 'lucide-react'; // If you're using Lucide, or use a react-icons alternative
+import { NavLink } from "react-router-dom";
+
+
 
 const DashboardPage = () => {
     const { spanishCompleted, englishCompleted, recentLogs } = useSelector((state) => state.card);
@@ -32,6 +36,8 @@ const DashboardPage = () => {
     const [user, setUser] = useState();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const userData = useSelector(state => state.card.userData)
+    const [menuOpen, setMenuOpen] = useState(false);
 
     async function fetchPredefinedSubjects() {
         const subjectsDoc = await PreDefinedSubject.getAllPredefiniedSubjects();
@@ -64,6 +70,19 @@ const DashboardPage = () => {
         })();
     }, []);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 p-8 flex flex-col">
             {/* HEADER */}
@@ -74,53 +93,89 @@ const DashboardPage = () => {
                 </h1>
 
                 {/* User Section */}
-                <div className="relative flex items-center space-x-3" ref={dropdownRef}>
-                    {/* User Info */}
+                {/* Combined Dropdown Section */}
+                <div className="relative" ref={dropdownRef}>
                     <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                         className="flex items-center space-x-3 focus:outline-none hover:ring-2 hover:ring-purple-300 rounded-full p-1 transition"
                     >
-                        {/* Avatar or Initial */}
-                        {profilePicUrl? (
-
-                            <img src={profilePicUrl} alt="User Avatar"  className="w-10 h-10 rounded-full object-cover"/>
-
+                        {profilePicUrl ? (
+                            <img
+                                src={profilePicUrl}
+                                alt="User Avatar"
+                                className="w-10 h-10 rounded-full object-cover"
+                            />
                         ) : (
                             <div className="w-10 h-10 bg-purple-200 text-purple-800 rounded-full flex items-center justify-center font-bold text-lg">
-                                {user?.name?.[0] ?? "?"}
+                                {userData?.firstName?.[0] || user?.name || "U"}
                             </div>
                         )}
 
-                        {/* Username */}
-                        <span className="text-sm font-semibold text-gray-800">
-                            {user?.name ?? "User"}
-                        </span>
+                        <span className="text-sm font-semibold text-gray-800 hidden sm:block">
+      {userData?.firstName || user?.name || "User"}
+    </span>
                     </button>
 
-                    {/* Dropdown */}
                     {dropdownOpen && (
-                        <div className="absolute right-0 top-12 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20">
-                            <button
-                                onClick={async () => {
-                                    await appService.logOutUser();
+                        <div className="absolute right-0 top-12 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-20 divide-y divide-gray-200">
+                            {/* Account Actions */}
+                            <div className="py-2">
+                                <button
+                                    onClick={async () => {
+                                        await appService.logOutUser();
+                                        setDropdownOpen(false);
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
+                                >
+                                    Logout
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate("/updateProfile");
+                                        setDropdownOpen(false);
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
+                                >
+                                    Update Profile
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate("/yourProfile");
+                                        setDropdownOpen(false);
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
+                                >
+                                    Your Profile
+                                </button>
+                            </div>
 
-                                }}
-                                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
-                            >
-                                Logout
-                            </button>
-                            <button
-                                onClick={ () => {
-                                    navigate('/updateProfile')
-
-                                }}
-                                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
-                            >
-                                Update Profile
-                            </button>
+                            {/* Navigation Pages */}
+                            <div className="py-2">
+                                {[
+                                    { label: "About", path: "/about" },
+                                    { label: "Contact", path: "/contact" },
+                                    { label: "Privacy", path: "/privacy" },
+                                ].map((item) => (
+                                    <button
+                                        key={item.path}
+                                        onClick={() => {
+                                            navigate(item.path);
+                                            setDropdownOpen(false);
+                                        }}
+                                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-purple-100 hover:text-purple-700 font-semibold"
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
+
+
+
+
+
             </header>
 
             {/* MAIN CONTENT */}
@@ -176,7 +231,7 @@ const DashboardPage = () => {
 
                             {/* Flag Quiz Card */}
                             <div
-                                onClick={() => navigate("/dashboard/flag-quiz")}
+                                onClick={() => navigate("/dashboard/flagQuiz")}
                                 className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-8 shadow-lg cursor-pointer flex flex-col items-center text-white hover:brightness-110 transition-transform transform hover:-translate-y-1"
                             >
                                 <MapPin className="mb-6" size={56} />

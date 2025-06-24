@@ -91,13 +91,6 @@ export class AppService {
     }}
 
 
-    async updateAvatar(avatarUrl){
-try {
-    await this.account.updatePrefs({avatar:avatarUrl})
-}catch (e){
-    console.log(e)
-}
-    }
 
 
 
