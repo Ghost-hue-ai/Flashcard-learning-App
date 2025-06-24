@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect, useCallback} from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -6,7 +6,8 @@ import documentService from "../appwrite/SubjectConfig";
 import flashcardService from "../appwrite/flashcardConfig";
 import INPUT from "../Components/Input";
 import { getSubjectId } from "../store/subjectSlice";
-import {updateRecentLogs} from "../store/CompletedCard.js";
+import { updateRecentLogs } from "../store/CompletedCard.js";
+import SEO from "../Components/SEO.jsx";
 
 function Toast({ message, onClose }) {
   // Simple toast for feedback
@@ -23,15 +24,14 @@ function Toast({ message, onClose }) {
 }
 
 function Dashboard() {
-
   const dispatch = useDispatch();
   const [subjects, setSubjects] = useState([]);
   const [toast, setToast] = useState(null);
   const user = useSelector((state) => state.auth.userData);
   const userId = user?.userId;
   const navigate = useNavigate();
-  const [name, setName] = useState('');
-  const [des, setDes] = useState('');
+  const [name, setName] = useState("");
+  const [des, setDes] = useState("");
   const [isEditing, setEditing] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -40,8 +40,8 @@ function Dashboard() {
       const flashcardsObject = await flashcardService.getAllFlashcard({
         userId: userId,
         subjectId: card.$id,
-      })
-      dispatch(updateRecentLogs(`#${card.name} was deleted`))
+      });
+      dispatch(updateRecentLogs(`#${card.name} was deleted`));
       const flashcards = flashcardsObject.documents || [];
 
       await Promise.all(
@@ -68,18 +68,14 @@ function Dashboard() {
     setIsDialogOpen(true);
   }
 
-  const  fetchSubjects = useCallback(async () => {
-
-      if (!userId) return;
-      try {
-        const subjectsObj = await documentService.getAllSubject({ userId });
-        setSubjects(subjectsObj.documents);
-      } catch (error) {
-        console.error("Error fetching subjects", error);
-      }
-
-
-
+  const fetchSubjects = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const subjectsObj = await documentService.getAllSubject({ userId });
+      setSubjects(subjectsObj.documents);
+    } catch (error) {
+      console.error("Error fetching subjects", error);
+    }
   }, [userId]);
   async function handleSubjectCreation() {
     try {
@@ -88,7 +84,7 @@ function Dashboard() {
         description: des,
         userId,
       });
-      dispatch(updateRecentLogs(`#${name}  subject was Created`))
+      dispatch(updateRecentLogs(`#${name}  subject was Created`));
       setToast("Subject created successfully!");
       await fetchSubjects();
     } catch (error) {
@@ -112,10 +108,14 @@ function Dashboard() {
     (async () => {
       await fetchSubjects();
     })();
-  }, [userId,fetchSubjects]);
+  }, [userId, fetchSubjects]);
 
   return (
     <>
+      <SEO
+        title="Subjects | Flashcard Learning App"
+        description="Manage your study subjects and organize your flashcards by topic."
+      />
       <div className="min-h-screen bg-gray-700 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6">
         <header className="mb-6 flex justify-between items-center max-w-7xl mx-auto px-2 sm:px-6">
           <h1 className="text-4xl font-extrabold tracking-tight text-purple-500">
@@ -276,8 +276,8 @@ function Dashboard() {
                 {/* Action Buttons */}
                 <div className="mt-4 flex justify-end gap-2">
                   <button
-                    onClick={async() => {
-                    await handleEdit(subject);
+                    onClick={async () => {
+                      await handleEdit(subject);
                     }}
                     className="px-3 py-1 text-sm bg-gray-700 hover:bg-gray-500 text-white rounded shadow"
                     title="Edit subject"
