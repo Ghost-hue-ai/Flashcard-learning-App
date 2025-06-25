@@ -11,6 +11,7 @@ function FlagQuiz() {
   const [disableOptions, setDisableOptions] = useState(false);
   const [score, setScore] = useState(0);
   const [usedCountries, setUsedCountries] = useState([]);
+  const [loading, setLoading] = useState(true)
   const createRandomBtns = useCallback(() => {
     const remaining = countriesName.filter(
       (name) => !usedCountries.includes(name)
@@ -37,6 +38,7 @@ function FlagQuiz() {
     // Instead of including usedCountries in dependencies,
     // update here with functional update:
     setUsedCountries((prevUsed) => [...prevUsed, rightAns]);
+
   }, [countriesName]); // <-- remove usedCountries from deps
 
   const handleOnClick = (e) => {
@@ -71,6 +73,7 @@ function FlagQuiz() {
 
           setCountriesName(names);
           setCountriesData(dataMap);
+          setLoading(false)
         }
       } catch (e) {
         console.log("🌍 Failed fetching flags:", e);
@@ -85,64 +88,68 @@ function FlagQuiz() {
   }, [countriesName, createRandomBtns]);
 
   return (
-    <>
-      <SEO
-        title="Flag Quiz | Flashcard Learning App"
-        description="Test your geography knowledge with the Flag Quiz. Identify flags from around the world!"
-      />
-      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
-        <h1 className="text-4xl font-bold text-purple-400 mb-8 tracking-wide animate-pulse">
-          🌍 Flag Quiz Game
-        </h1>
+    <>`
+      {loading? ( <p className="text-lg text-white animate-pulse">🌐 Loading flags...</p>
+      ): (<>
+        <SEO
+            title="Flag Quiz | Flashcard Learning App"
+            description="Test your geography knowledge with the Flag Quiz. Identify flags from around the world!"
+        />
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
+          <h1 className="text-4xl font-bold text-purple-400 mb-8 tracking-wide animate-pulse">
+            🌍 Flag Quiz Game
+          </h1>
 
-        <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col items-center transition-all duration-500">
-          <div className="mb-6 text-xl font-semibold text-green-400">
-            Score: {score}
+          <div className="bg-gray-800 p-10 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col items-center transition-all duration-500">
+            <div className="mb-6 text-xl font-semibold text-green-400">
+              Score: {score}
+            </div>
+
+            {correctAns && (
+                <>
+                  <img
+                      src={countriesData[correctAns]}
+                      alt="Country Flag"
+                      className="w-72 h-44 object-contain border-4 border-purple-500 rounded-xl mb-8 shadow-lg transition-all duration-300"
+                  />
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                    {options.map((option, i) => {
+                      const isCorrect = option === correctAns;
+                      const isClicked = option === selectedAns;
+
+                      const baseStyles =
+                          "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg";
+                      const btnStyle = isClicked
+                          ? isCorrect
+                              ? "bg-green-600 flex items-center justify-center gap-2"
+                              : "bg-red-600 flex items-center justify-center gap-2"
+                          : disableOptions && isCorrect
+                              ? "bg-green-500"
+                              : "bg-purple-700 hover:bg-purple-600";
+
+                      return (
+                          <button
+                              key={i}
+                              className={`${baseStyles} ${btnStyle}`}
+                              disabled={disableOptions}
+                              onClick={handleOnClick}
+                          >
+                            {option}
+                            {isClicked && isCorrect && (
+                                <CheckCircle className="ml-2" />
+                            )}
+                            {isClicked && !isCorrect && <XCircle className="ml-2" />}
+                          </button>
+                      );
+                    })}
+                  </div>
+                </>
+            )}
           </div>
-
-          {correctAns && (
-            <>
-              <img
-                src={countriesData[correctAns]}
-                alt="Country Flag"
-                className="w-72 h-44 object-contain border-4 border-purple-500 rounded-xl mb-8 shadow-lg transition-all duration-300"
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-                {options.map((option, i) => {
-                  const isCorrect = option === correctAns;
-                  const isClicked = option === selectedAns;
-
-                  const baseStyles =
-                    "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg";
-                  const btnStyle = isClicked
-                    ? isCorrect
-                      ? "bg-green-600 flex items-center justify-center gap-2"
-                      : "bg-red-600 flex items-center justify-center gap-2"
-                    : disableOptions && isCorrect
-                    ? "bg-green-500"
-                    : "bg-purple-700 hover:bg-purple-600";
-
-                  return (
-                    <button
-                      key={i}
-                      className={`${baseStyles} ${btnStyle}`}
-                      disabled={disableOptions}
-                      onClick={handleOnClick}
-                    >
-                      {option}
-                      {isClicked && isCorrect && (
-                        <CheckCircle className="ml-2" />
-                      )}
-                      {isClicked && !isCorrect && <XCircle className="ml-2" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
         </div>
-      </div>
+
+      </>)}
     </>
   );
 }

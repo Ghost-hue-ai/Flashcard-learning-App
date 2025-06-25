@@ -1,105 +1,55 @@
-import conf from '../conf/conf'
-import { Client,Account,ID } from "appwrite";
-import {OAuthProvider} from "appwrite";
-
+import conf from '../conf/conf';
+import { Client, Account, ID, OAuthProvider } from 'appwrite';
+import Input from '../Components/Input'
 export class AppService {
-    client = new Client()
+    client = new Client();
     account;
 
     constructor() {
         this.client.setEndpoint(conf.appwriteUrl).setProject(conf.projectId);
-        this.account = new Account(this.client)
+        this.account = new Account(this.client);
     }
-
-    //
-    // async createAccount({email,password,name}){
-    //     try {
-    //         return await this.account.create(
-    //             ID.unique(),
-    //             email,
-    //             password,
-    //             name
-    //
-    //         )
-    //
-    //     } catch (error) {
-    //         console.error('error creating an account: ', error);
-    //
-    //     }
-    // }
 
     async getCurrentUser() {
         try {
-            return await this.account.get()
-
+            return await this.account.get();
         } catch (error) {
-            console.error('error getting the current user info ', error);
-
+            console.error('Error getting current user:', error);
         }
     }
-
-    // async logInUser({email,password}){
-    //     try {
-    //         return this.account.createEmailPasswordSession(
-    //             email,
-    //             password
-    //         )
-    //     } catch (error) {
-    //         console.error('error logging user', error);
-    //
-    //
-    //     }
-    // }
 
     async logOutUser() {
         try {
-            await this.account.deleteSession('current')
-            const auth0Domain = 'dev-623dh4zgohh7hnua.us.auth0.com'; // e.g., dev-xyz123.us.auth0.com
-            const clientId = '6sXhVtxPN8rYbVWTcCJZM2VmUGHWOHCU';
-            const returnTo = encodeURIComponent('http://localhost:5173/'); // Where to go after logout
+            await this.account.deleteSession('current');
 
-            window.location.href = `https://${auth0Domain}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`;
+            const returnTo = encodeURIComponent(conf.auth0ReturnTo);
+            const logoutUrl = `https://${conf.auth0Domain}/v2/logout?client_id=${conf.auth0ClientId}&returnTo=${returnTo}`;
 
-
+            window.location.href = logoutUrl;
         } catch (error) {
-            console.error('error logging out user', error);
-
+            console.error('Error logging out user:', error);
         }
     }
-
-
     async loginWithAuth0() {
         try {
             return await this.account.createOAuth2Session(
                 OAuthProvider.Auth0,
-                "http://localhost:5173/oauth/callback",
-                'http://localhost:5173/login'
-            )
-
+                'https://flashcard-master-xi.vercel.app/oauth/callback',
+                'https://flashcard-master-xi.vercel.app/login'
+            );
         } catch (e) {
-            console.error('failed logging with auth0 ', e)
+            console.error('Failed logging in with Auth0:', e);
         }
     }
-    async updateUserName(name){
+
+    async updateUserName(name) {
         try {
-            await this.account.updateName(
-                name
-            )
-
-        }catch(e){
-        console.log(e)
-    }}
-
-
-
-
-
-
+            await this.account.updateName(name);
+        } catch (e) {
+            console.error('Error updating user name:', e);
+        }
+    }
 }
 
-
-
-
-const accountServ = new AppService()
-export default accountServ
-
+const accountServ = new AppService();
+export default accountServ;
