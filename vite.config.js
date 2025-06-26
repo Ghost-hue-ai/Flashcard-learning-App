@@ -10,4 +10,12 @@ export default defineConfig({
       drop: ['console', 'debugger'], // Removes console.* and debugger in production
     },
   },
+  server: {
+    historyApiFallback: true, // For dev server routing fallback
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 });
