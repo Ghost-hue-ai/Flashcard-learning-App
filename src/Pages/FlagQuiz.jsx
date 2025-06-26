@@ -88,7 +88,7 @@ function FlagQuiz() {
   }, [countriesName, createRandomBtns]);
 
   return (
-    <>`
+    <>
       {loading? ( <p className="text-lg text-white animate-pulse">🌐 Loading flags...</p>
       ): (<>
         <SEO

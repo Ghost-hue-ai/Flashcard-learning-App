@@ -1,6 +1,10 @@
 import { StrictMode } from 'react'
+import React from 'react';
+
 import AuthLoader from './Components/AuthLoader.jsx';
 import store from './store/store.js'
+import LogRocket from 'logrocket';
+
 import { createRoot } from 'react-dom/client'
 import FlashcardPage from "./Pages/FlashcardPage.jsx";
 import './index.css'
@@ -25,6 +29,29 @@ import OAuthCallback from './Components/OAuthHandler.jsx'
 import UpdatePage from "./Pages/UpdatePage.jsx";
 import YourProfile from "./Pages/YourProfile.jsx";
 import FlagQuiz from "./Pages/FlagQuiz.jsx";
+
+LogRocket.init('wxlpzt/flashcard-error');
+
+
+
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+    componentDidCatch(error, errorInfo) {
+        LogRocket.captureException(error, { extra: errorInfo });
+    }
+    render() {
+        if (this.state.hasError) {
+            return <p>Oops! Something went wrong.</p>;
+        }
+        return this.props.children;
+    }
+}
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -64,12 +91,16 @@ const router = createBrowserRouter(
   )
 )
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <AuthLoader>
-        <RouterProvider router={router} />
-      </AuthLoader>
+
+        <ErrorBoundary>
+            <AuthLoader>
+                <RouterProvider router={router} />
+            </AuthLoader>
+        </ErrorBoundary>
+
     </Provider>
-  </StrictMode>,
-)
+  </StrictMode>
+);

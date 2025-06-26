@@ -237,17 +237,10 @@ function InitialPage() {
                 >
                   <Twitter size={20} />
                 </a>
-                <a
-                  href="https://linkedin.com/in/yourusername"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-purple-600"
-                >
-                  <Linkedin size={20} />
-                </a>
+
 
                 <a
-                    href="https://linkedin.com/in/yourusername"
+                    href="https://www.facebook.com/profile.php?id=61577694876597"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-purple-600"

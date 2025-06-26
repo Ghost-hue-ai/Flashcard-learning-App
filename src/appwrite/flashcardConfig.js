@@ -1,5 +1,6 @@
 import { Client, Databases, ID, Permission, Role,Query } from "appwrite";
 import conf from '../conf/conf'
+import LogRocket from 'logrocket';
 
 
 export class FlashcardService{
@@ -31,7 +32,7 @@ export class FlashcardService{
               ]
             );
         } catch (error) {
-            console.error("Error creating flashcard:", error);
+            LogRocket.captureException(error);
 
         }
 
@@ -50,7 +51,7 @@ export class FlashcardService{
               ]
             );
         } catch (error) {
-            console.error("Error fetching flashcards:", error);
+            LogRocket.captureException(error);
 
         }
     }
@@ -66,7 +67,7 @@ export class FlashcardService{
             )
 
         } catch (error) {
-            console.error("Error deleting flashcards:", error);
+            LogRocket.captureException(error);
 
         }
     }
@@ -85,7 +86,7 @@ export class FlashcardService{
             );
 
         } catch (error) {
-            console.error('error upadting dacument',error);
+            LogRocket.captureException(error);
 
         }
 

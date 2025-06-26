@@ -9,6 +9,7 @@ import {
   updateUserData,
 } from "../store/CompletedCard.js";
 import SEO from "../Components/SEO.jsx";
+import LogRocket from "logrocket";
 
 function UpdatePage() {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ function UpdatePage() {
               dispatch(updateRecentLogs("Profile updated"));
               navigate("/dashboard");
             } catch (error) {
-              console.error(error);
+              LogRocket.captureException(error);
               alert("Uploading failed.");
             }
           }}

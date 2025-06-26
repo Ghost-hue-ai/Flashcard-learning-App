@@ -1,6 +1,6 @@
 import { Client, Databases, ID, Permission, Role,Query } from "appwrite";
 import conf from '../conf/conf'
-
+import LogRocket from 'logrocket';
 
 export class FlashcardService{
     client = new Client()
@@ -18,7 +18,7 @@ export class FlashcardService{
 
             )
         } catch (error) {
-            console.error("failed retreiving data from collection Predefiened Subjects ",error)
+            LogRocket.captureException(error)
         }
     }
 }

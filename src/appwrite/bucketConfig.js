@@ -1,6 +1,7 @@
 import conf from '../conf/conf'
 import {Client, Storage, ID, Account} from "appwrite";
 import {Permission,Role} from "appwrite";
+import LogRocket from 'logrocket';
 
 
 export class StorageService {
@@ -21,17 +22,17 @@ export class StorageService {
              [Permission.read(Role.any())]
          )
         }catch (e){
-            console.log(e)
+            LogRocket.captureException(e)
         }
     }
 
      getFilePreview(fileId) {
         try {
             const result = this.storage.getFileView(conf.bucketId, fileId);
-            console.log("📦 Appwrite result:", result); // <- Add this
+            LogRocket.captureException(result);
             return result
         } catch (e) {
-            console.log(e);
+            LogRocket.captureException(e);
             return null;
         }
     }

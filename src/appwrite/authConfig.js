@@ -1,6 +1,8 @@
 import conf from '../conf/conf';
 import { Client, Account, ID, OAuthProvider } from 'appwrite';
 import Input from '../Components/Input'
+import LogRocket from 'logrocket';
+
 export class AppService {
     client = new Client();
     account;
@@ -14,7 +16,8 @@ export class AppService {
         try {
             return await this.account.get();
         } catch (error) {
-            console.error('Error getting current user:', error);
+            LogRocket.captureException(error);
+            return null
         }
     }
 
@@ -27,18 +30,18 @@ export class AppService {
 
             window.location.href = logoutUrl;
         } catch (error) {
-            console.error('Error logging out user:', error);
+            LogRocket.captureException(error);
         }
     }
     async loginWithAuth0() {
         try {
             return await this.account.createOAuth2Session(
                 OAuthProvider.Auth0,
-                'https://flarelearn.vercel.app/oauth/callback',
-                'https://flarelearn.vercel.app/login'
+                conf.auth0Callback,
+                conf.auth0Failure
             );
         } catch (e) {
-            console.error('Failed logging in with Auth0:', e);
+            LogRocket.captureException(e);
         }
     }
 
@@ -46,7 +49,8 @@ export class AppService {
         try {
             await this.account.updateName(name);
         } catch (e) {
-            console.error('Error updating user name:', e);
+            LogRocket.captureException(e);
+            return null
         }
     }
 }

@@ -11,6 +11,7 @@ import storageServ from "../appwrite/bucketConfig.js";
 import { Menu } from "lucide-react"; // If you're using Lucide, or use a react-icons alternative
 import { NavLink } from "react-router-dom";
 import SEO from "../Components/SEO.jsx";
+import LogRocket from "logrocket";
 
 const DashboardPage = () => {
   const { spanishCompleted, englishCompleted, recentLogs } = useSelector(
@@ -47,13 +48,15 @@ const DashboardPage = () => {
     (() => {
       try {
         const url = storageServ.getFilePreview(profilePicId);
-        console.log("🆔 profilePicId:", profilePicId);
-        console.log("🖼️ Preview URL from Appwrite:", url); // <-- Log this
+
+        LogRocket.captureException(profilePicId);
+     // <-- Log this
+        LogRocket.captureException(url);
         if (url) {
           setProfilePicUrl(url);
         }
       } catch (e) {
-        console.log("❌ Error fetching profile pic preview:", e);
+        LogRocket.captureException(e);
       }
     })();
   }, [profilePicId]);
@@ -192,7 +195,8 @@ const DashboardPage = () => {
                       ) {
                         navigate("/dashboard/learnEnglish");
                       } else {
-                        console.log("Unknown subject:", subject.name);
+
+                        LogRocket.captureException(subject.name);
                       }
                     }}
                     key={subject.$id}
@@ -302,23 +306,24 @@ const DashboardPage = () => {
                 <button
                   onClick={() => {
                     dispatch(resetCards());
+                    localStorage.removeItem("usedSpanishCard");
+                    localStorage.removeItem("usedEnglishCard");
                     setIsBouncing(true);
                     setTimeout(() => setIsBouncing(false), 300); // animation duration
                   }}
                   className={`
-        bg-red-600 hover:bg-red-700 active:bg-red-800
-        text-white font-semibold
-        px-5 py-2 rounded-lg
-        shadow-md
-        transition
-        duration-300
-        focus:outline-none focus:ring-2 focus:ring-red-400
-        select-none
-        flex items-center gap-2
-        ${isBouncing ? "animate-bounce" : ""}
-      `}
+    bg-red-600 hover:bg-red-700 active:bg-red-800
+    text-white font-semibold
+    px-5 py-2 rounded-lg
+    shadow-md
+    transition
+    duration-300
+    focus:outline-none focus:ring-2 focus:ring-red-400
+    select-none
+    flex items-center gap-2
+    ${isBouncing ? "animate-bounce" : ""}
+  `}
                 >
-                  {/* Refresh Icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5"
@@ -335,6 +340,14 @@ const DashboardPage = () => {
                   </svg>
                   Reset Progress
                 </button>
+                <button
+                  onClick={() => {
+                    throw new Error("This is your first error!");
+                  }}
+                >
+                  Break the world
+                </button>
+                ;
               </div>
             </div>
           </section>

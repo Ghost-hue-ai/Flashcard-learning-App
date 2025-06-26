@@ -1,5 +1,6 @@
 import { Client, Databases, ID, Permission, Role, Query } from "appwrite";
 import conf from "../conf/conf";
+import LogRocket from 'logrocket';
 
 export class SubjectService {
   client = new Client();
@@ -26,7 +27,7 @@ export class SubjectService {
         ]
       );
     } catch (error) {
-      console.error("Error creating subject:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -38,7 +39,7 @@ export class SubjectService {
         [Query.equal("userId", userId)]
       );
     } catch (error) {
-      console.error("Error fetching subject:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -50,7 +51,7 @@ export class SubjectService {
         documentId
       );
     } catch (error) {
-      console.error("Error deleting subject:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -68,7 +69,7 @@ export class SubjectService {
       );
 
     } catch (error) {
-      console.error('error updating the subject in core level',error);
+      LogRocket.captureException(error);
 
     }
 

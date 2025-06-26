@@ -1,3 +1,17 @@
+const DEPLOYED_DOMAIN = "https://flarelearn.vercel.app";
+const LOCAL_DOMAIN = "http://localhost:5173";
+
+const getBaseDomain = () => {
+  // Use deployed domain if running in production, else use localhost
+  if (typeof window !== "undefined") {
+    if (window.location.hostname === "flarelearn.vercel.app") {
+      return DEPLOYED_DOMAIN;
+    }
+    // You can add more checks for other production domains if needed
+  }
+  return LOCAL_DOMAIN;
+};
+
 const config = {
   // Appwrite
   appwriteUrl: import.meta.env.VITE_APPWRITE_URL,
@@ -13,9 +27,19 @@ const config = {
   // Auth0
   auth0Domain: import.meta.env.VITE_AUTH0_DOMAIN,
   auth0ClientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
-  auth0ReturnTo: import.meta.env.VITE_AUTH0_RETURN_TO,
-  auth0Callback: import.meta.env.VITE_AUTH0_CALLBACK,
-  auth0Failure: import.meta.env.VITE_AUTH0_FAILURE,
+
+  // Base domain
+  baseDomain: getBaseDomain(),
+  // You can also add dynamic callback/returnTo URLs:
+  get auth0ReturnTo() {
+    return getBaseDomain() + "/";
+  },
+  get auth0Callback() {
+    return getBaseDomain() + "/oauth/callback";
+  },
+  get auth0Failure() {
+    return getBaseDomain() + "/login";
+  },
 };
 
 export default config;

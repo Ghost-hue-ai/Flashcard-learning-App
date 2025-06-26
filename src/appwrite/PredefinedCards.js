@@ -1,5 +1,6 @@
 import { Client, Databases, ID, Query } from "appwrite";
 import conf from "../conf/conf";
+import LogRocket from 'logrocket';
 
 export class FlashcardService {
   client = new Client();
@@ -26,7 +27,7 @@ export class FlashcardService {
         }
       );
     } catch (error) {
-      console.error("Failed to create card in predefined collection:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -38,7 +39,7 @@ export class FlashcardService {
         documentId
       );
     } catch (error) {
-      console.error("Failed to delete card from predefined collection:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -58,7 +59,7 @@ export class FlashcardService {
         }
       );
     } catch (error) {
-      console.error("Failed to update card in predefined collection:", error);
+      LogRocket.captureException(error);
     }
   }
 
@@ -70,7 +71,7 @@ export class FlashcardService {
         [Query.equal("category", category)]
       );
     } catch (error) {
-      console.error("Error retrieving predefined flashcards:", error);
+      LogRocket.captureException(error);
     }
   }
 }
