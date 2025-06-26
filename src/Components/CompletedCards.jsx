@@ -76,42 +76,25 @@ function GrammarFlashcard({
           </div>
           {choices && (
             <ul className="text-white text-sm space-y-1 pl-5">
-              {choices.map((choice, i) => (
-                <li
-                  key={i}
-                  className={`transition-colors duration-200 ${
-                    // Show correct/incorrect styling if selectedChoice is defined
-                    isAnswered
-                      ? choice === answer
-                        ? "text-green-400 font-bold"
-                        : selectedChoice === choice
-                        ? "text-red-400 line-through"
-                        : "text-gray-400"
-                      : "text-gray-400"
-                  }`}
-                  // Only add onClick if setSelectedChoice is provided (i.e., not a completed card)
-                  {...(setSelectedChoice
-                    ? {
-                        onClick: (e) => {
-                          e.stopPropagation();
-                          if (!selectedChoice && setSelectedChoice) {
-                            setSelectedChoice(choice);
-                            setFlipped((prev) => !prev);
-                            handleClick?.({
-                              id,
-                              selectedChoice: choice,
-                              correctAnswer: answer,
-                              completed: true,
-                            });
-                          }
-                        },
-                        style: { cursor: "pointer" },
-                      }
-                    : {})}
-                >
-                  {choice}
-                </li>
-              ))}
+              {choices.map((choice, i) => {
+                let className = "transition-colors duration-200 ";
+                if (selectedChoice !== undefined && selectedChoice !== null) {
+                  if (choice === answer) {
+                    className += "text-green-400 font-bold";
+                  } else if (choice === selectedChoice) {
+                    className += "text-red-400 line-through font-bold";
+                  } else {
+                    className += "text-gray-400";
+                  }
+                } else {
+                  className += "text-gray-400";
+                }
+                return (
+                  <li key={i} className={className}>
+                    {choice}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
