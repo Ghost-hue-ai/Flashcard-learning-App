@@ -229,14 +229,7 @@ function InitialPage() {
                 >
                   <GitHub size={20} />
                 </a>
-                <a
-                  href="https://twitter.com/yourusername"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-purple-600"
-                >
-                  <Twitter size={20} />
-                </a>
+
 
 
                 <a
@@ -248,7 +241,7 @@ function InitialPage() {
                   <Facebook size={20} />
                 </a>
                 <a
-                  href="https://instagram.com/yourusername"
+                  href="https://www.instagram.com/flashdev009/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-purple-600"
@@ -256,7 +249,7 @@ function InitialPage() {
                   <Instagram size={20} />
                 </a>
                 <a
-                  href="mailto:youremail@example.com"
+                  href="mailto:flashdev009@gmail.com"
                   className="hover:text-purple-600"
                 >
                   <Mail size={20} />

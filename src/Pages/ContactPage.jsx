@@ -25,28 +25,28 @@ function ContactPage() {
 
           <div className="flex justify-center gap-6 text-purple-600 text-2xl">
             <a
-              href="https://facebook.com/yourusername"
+              href="https://www.facebook.com/profile.php?id=61577694876597"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaFacebook />
             </a>
             <a
-              href="https://instagram.com/yourusername"
+              href="https://www.instagram.com/flashdev009/"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaInstagram />
             </a>
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/Ghost-hue-ai"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaGithub />
             </a>
             <a
-              href="mailto:youremail@example.com"
+              href="mailto:flashdev009@gmail.com"
               className="text-gray-700 hover:text-purple-600"
             >
               <FaEnvelope />
