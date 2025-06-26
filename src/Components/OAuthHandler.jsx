@@ -18,7 +18,9 @@ function OAuthCallback() {
                 console.error('OAuth failed:', err);
                 dispatch(logout());
                 // Redirect to your OAuth login flow again
-                window.location.href = 'http://localhost:5173/login';
+                window.location.href = import.meta.env.DEV
+                    ? "http://localhost:5173/login"
+                    : "https://flarelearn.vercel.app/login";
             }
         })()
 
