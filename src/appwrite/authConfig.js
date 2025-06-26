@@ -34,8 +34,8 @@ export class AppService {
         try {
             return await this.account.createOAuth2Session(
                 OAuthProvider.Auth0,
-                'https://flashcard-master-xi.vercel.app/oauth/callback',
-                'https://flashcard-master-xi.vercel.app/login'
+                'https://flarelearn.vercel.app/oauth/callback',
+                'https://flarelearn.vercel.app/login'
             );
         } catch (e) {
             console.error('Failed logging in with Auth0:', e);
