@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 
 function GrammarFlashcard({
@@ -7,25 +7,22 @@ function GrammarFlashcard({
   choices,
   answer,
   selectedChoice,
-  setSelectedChoice, // <-- add this prop
+  setSelectedChoice,
   reasoning,
   category,
   className = "",
-  handleClick, // <-- make sure this is passed if used
-  id, // <-- make sure this is passed if used
+  handleClick,
+  id,
 }) {
   const dispatch = useDispatch();
-
   const [flipped, setFlipped] = useState(false);
-  const isAnswered = selectedChoice !== null;
+
+  // If selectedChoice is undefined, treat as completed and non-interactive
+  const isAnswered = selectedChoice !== undefined && selectedChoice !== null;
 
   const handleCardClick = () => {
     setFlipped((prev) => !prev);
-    console.log("Card flipped");
   };
-  // useEffect(() => {
-  //     setFlipped(true)
-  // }, []);
 
   return (
     <div
@@ -83,38 +80,39 @@ function GrammarFlashcard({
                 <li
                   key={i}
                   className={`transition-colors duration-200 ${
-                    selectedChoice
+                    // Show correct/incorrect styling if selectedChoice is defined
+                    isAnswered
                       ? choice === answer
                         ? "text-green-400 font-bold"
                         : selectedChoice === choice
                         ? "text-red-400 line-through"
                         : "text-gray-400"
-                      : "hover:text-green-500 cursor-pointer"
+                      : "text-gray-400"
                   }`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!selectedChoice && setSelectedChoice) {
-                      setSelectedChoice(choice);
-                      setFlipped((prev) => !prev); // Flip to show answer
-                      console.log("Selected:", choice);
-                      handleClick?.({
-                        id,
-                        selectedChoice: choice,
-                        correctAnswer: answer,
-                        completed: true,
-                      });
-                    }
-                  }}
+                  // Only add onClick if setSelectedChoice is provided (i.e., not a completed card)
+                  {...(setSelectedChoice
+                    ? {
+                        onClick: (e) => {
+                          e.stopPropagation();
+                          if (!selectedChoice && setSelectedChoice) {
+                            setSelectedChoice(choice);
+                            setFlipped((prev) => !prev);
+                            handleClick?.({
+                              id,
+                              selectedChoice: choice,
+                              correctAnswer: answer,
+                              completed: true,
+                            });
+                          }
+                        },
+                        style: { cursor: "pointer" },
+                      }
+                    : {})}
                 >
                   {choice}
                 </li>
               ))}
             </ul>
-          )}
-          {!selectedChoice && (
-            <div className="text-[10px] text-white/60 italic mt-4 text-center">
-              Tap to reveal answer →
-            </div>
           )}
         </div>
 
